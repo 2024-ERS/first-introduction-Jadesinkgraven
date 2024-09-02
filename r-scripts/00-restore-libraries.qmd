@@ -1,6 +1,7 @@
 ---
+y---
 title: "Using the renv library for making R predictable"
-author: "Han Olff"
+author: "Han Olff - changed by Jade Sinkgraven"
 format: html
 date: "2024-09-02"
 ---
