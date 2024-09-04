@@ -13,6 +13,9 @@ editor:
 Load the required libraries :
 
 ```{r message = FALSE, warning = FALSE}
+# restore you library (always keep at the start of script - libraries will be synchronized between collaborators)
+renv::restore()
+
 # clear the R environment
 rm(list = ls())
 
