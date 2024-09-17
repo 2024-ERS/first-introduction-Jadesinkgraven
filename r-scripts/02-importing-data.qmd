@@ -3,6 +3,8 @@ title: "Importing data into R"
 author: "Han Olff"
 format: html
 date: "2024-08-31"
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Importing data in R
@@ -100,3 +102,26 @@ ggplot(data=FactSectionAnimals,
        mapping=aes(x=Name_eng,y=CountLeft)) +
   geom_boxplot()
 ```
+
+#### 3.4.1 Practice
+
+```{r}
+#| label: read-google-sheets-data
+
+FactVegComp_link <- "https://docs.google.com/spreadsheets/d/1NIqhbeWr9R_z4jJMF3SPaNdW18Ljn_QAnf6pmRj94i4/pub?gid=276437563&single=true&output=csv"
+FactVegComp<-read_csv(FactVegComp_link)
+
+```
+
+```{r}
+#| label: fig-graph
+
+ggplot(d=FactVegComp,
+mapping=aes(x=Species_ID, y=CoverPerc))+
+   = "Cover in %" y="Species"
+geom_boxplot()
+
+```
+
+
+

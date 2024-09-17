@@ -1,3 +1,9 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console 
+---
+
 ------------------------------------------------------------------------
 
 title: "Working with quarto documents that include R code" author: "Han Olff" date: "2024-08-29" format: html editor: markdown: wrap: 72 ---
@@ -41,8 +47,12 @@ B <-10
 C <- A+B
 # print the result
 print(C)
+# calculate mean of 5,24,33,45
+my_numbers <-c(5,24,33,45)
+base::mean(my_numbers) # use function mean from package base
 ```
 
+Then make a plot
 
 ```{r, message = FALSE, warning = FALSE}
 #| label: fig-histogram
@@ -61,8 +71,6 @@ ggplot2::ggplot(data=data1,
   geom_histogram()
 
 ```
-
-
 
 So the text \`\`\``{r} indicates that you start with a code chunk, and`\`\`\` completes it. use the quote that is typically the key below your \<esc\> key on your keyboard. To keep your output document clean, you can add options to messages and warnings (only add when your codes works well)
 
@@ -95,7 +103,7 @@ Also see this [overview of output formats](https://quarto.org/docs/reference/).
 How a code chunk behaves is determined by the execution options. You can set if you want different aspects as the code itself, the output from that code, warnings, etc in the output document.
 
 | Execute option: | Descript                                                                                                                                                                                    |
-|---------------------|---------------------------------------------------|
+|----------------------|-------------------------------------------------|
 | eval            | Evaluate the code chunk (if false, just echos the code into the output). echo Include the source code in output                                                                             |
 | output          | Include the results of executing the code in the output (true, false, or asis to indicate that the output is raw markdown and should not have any of Quarto’s standard enclosing markdown). |
 | warning         | Include warnings in the output.                                                                                                                                                             |
