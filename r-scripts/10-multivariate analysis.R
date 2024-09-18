@@ -24,7 +24,7 @@ elevdat
 
 # read the macrotransect clay thickness from the soil profile dataset
 claydat<-readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQyEg6KzIt6SdtSKLKbbL3AtPbVffq-Du-3RY9Xq0T9TwPRFcgvKAYKQx89CKWhpTKczPG9hKVGUfTw/pub?gid=943188085&single=true&output=csv") |>
-  dplyr::filter(Year==2024 & SoilType_ID %in% c("clay","clay-organic") & TransectPoint_ID<=900) |>
+  dplyr::filter(Year==2024 & SoilType_ID %in% c("clay","clay-organic") & TransectPoint_ID<=1150) |>
   dplyr::select(TransectPoint_ID,corrected_depth) |>     
   group_by(TransectPoint_ID) |> 
   dplyr::summarize(clay_cm=mean(corrected_depth,na.rm=T)) #calculate average clay layer thickness  for each pole
@@ -46,7 +46,7 @@ gulleydist
   
 # also add redox
 redox<-readr::read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQyEg6KzIt6SdtSKLKbbL3AtPbVffq-Du-3RY9Xq0T9TwPRFcgvKAYKQx89CKWhpTKczPG9hKVGUfTw/pub?gid=1911552509&single=true&output=csv") |>
-  dplyr::filter(Year==2024,TransectPoint_ID<=900) %>%
+  dplyr::filter(Year==2023,TransectPoint_ID<=1150) %>%
   dplyr::group_by(TransectPoint_ID,ProbeDepth) %>%
   dplyr::summarize(redox_mV=mean(redox_raw2_mV,na.rm=T)) %>%
   tidyr::pivot_wider(id_cols=TransectPoint_ID,
@@ -79,7 +79,9 @@ envdat
 
 ##### explore the correlations among the environmental factors in a panel pairs plot
 psych::pairs.panels(envdat,smooth=F,ci=T,ellipses=F,stars=T,method="pearson")
+#pearson correlation is used for linear relationships
 psych::pairs.panels(envdat,smooth=F,ci=T,ellipses=F,stars=T,method="spearman")
+#spearman correlation is used for non-linear relationships
 # note that the units are very different! 
 
 ##### Ordination: run a Principal Component Analysis (PCA) on the environmental data
@@ -93,11 +95,16 @@ envdat1<-envdat |>
   dplyr::select(-TransectPoint_ID)
 
 # do a principal component analysis (pca) 
-
+pca_env <- prcomp(envdat, center=T, scale=T)
+summary(pca)
+#show the site scores for axia 1
+pca_env$x
 
 # the PCs are reduced dimensions of the dataset
 # you reduce 6 variables to 2 dimensions
 # make a biplot (variable scores plus sample score) the pca ordination
+#label the axes with explained variation
+biplot(pca_env, cex=0.7, col=c("red","blue","green","purple","orange","black"), main="PCA ordination of environmental data", xlab="PC1 (49%)", ylab="PC2 (21%)")
 
 
 ##### ordination: calculate and plot a Non-metric Multidimensional Scaling (NMDS) ordination
