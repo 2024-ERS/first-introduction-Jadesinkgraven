@@ -74,11 +74,35 @@ plot(monthly_temps_decomp)
 
 # average temperature of the coldest month per meteorological year
 
-  # note that 2010 and 2011 were the last winters with a (on average) sub-zero month, 
+dat_metyear_dec <- dat_month |>
+  dplyr::group_by(metyear_dec) |>
+  summarise(minmonth = min(avgtemp_mo_oC, na.rm = TRUE))
+dat_metyear_dec
+
+# note that 2010 and 2011 were the last winters with a (on average) sub-zero month, 
 # potentially relevant for cockle recruitment (crabs stay on mudflats eating spatfall)
+dat_metyear_dec |>
+  ggplot(aes(x=metyear_dec, y=minmonth)) +
+  geom_line(linewidth=.7) +
+  geom_point() +
+  ggtitle("Average temperature of the coldest month per meteorological year") +
+  theme(text = element_text(size=15))
+
 
 # Hellmann index (sum of all below-zero daily average temperatures from 1 November of previous year until 31 march)
 # see https://nl.wikipedia.org/wiki/Koudegetal
+dat_hellmann <- dat |>
+  dplyr::filter(month %in% c(11,12,1,2,3), TG < 0,) |>
+  dplyr::group_by(metyear_nov) |>
+  dplyr::summarize(hellmann = sum(TG, na.rm = TRUE))
+tail(dat_hellmann,20)
+
+dat_hellmann |>
+  ggplot(aes(x=metyear_nov, y=hellmann)) +
+  geom_line(linewidth=.7) +
+  geom_point() +
+  ggtitle("Hellmann index per meteorological year") +
+  theme(text = element_text(size=15))
 
 # 1997 was the last "Elfstedentocht"
 # 2014 -2024 (our transect study) is characterized by only warm winters
@@ -86,4 +110,25 @@ plot(monthly_temps_decomp)
 # Warmth index
 library(quantreg)
 # see for calculation https://www.knmi.nl/nederland-nu/klimatologie/lijsten/warmtegetallen
+
+dat_warmth_Index <- dat |>
+  dplyr::filter(month %in% c(4:8), TG > 18) |>
+  dplyr::group_by(year) |>
+  dplyr::summarize(WarmthIndex = sum(TG, na.rm = TRUE))
+tail(dat_warmth_Index,20)
+
+#add the 10, 50 and 90 quantiles to the plot and give each line a different color
+dat_warmth_Index |>
+  ggplot(aes(x=year, y=WarmthIndex)) +
+  #geom_line(linewidth=.7) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  ggtitle("Warmth index per year") +
+  theme(text = element_text(size=15)) +
+  geom_quantile(quantiles = c(0.1, 0.5, 0.9), col = "purple")
+
+dat_warmth_Index
+
+
+
 
